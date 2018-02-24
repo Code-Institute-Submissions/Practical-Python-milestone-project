@@ -23,10 +23,11 @@ class  TestBlackjack(unittest.TestCase):
         # build five decks
         self.assertEqual(blackjack.card_shoe(5), test_deck*5)
         # self.assertEqual(blackjack.card_shoe(), test_deck*5)  # test designed to fail.
-        
+    
+        # if an integer not entered, convert to 1 deck
         self.assertEqual(blackjack.card_shoe(-1), test_deck*1)
-        
         self.assertEqual(blackjack.card_shoe(4.5), test_deck*1)
+        self.assertEqual(blackjack.card_shoe("a"), test_deck*1)
         
 
 if __name__ == '__main__':
