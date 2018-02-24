@@ -34,9 +34,24 @@ def card_val(card):
         return int(card)
 
 def hand_val(dealthand = []):
-    return hand_val()
+    total_aces = 0
+    total = 0
+    for card in dealthand:
+        if not dealthand:
+            return 0
+        elif card == ace:
+            if total >= 11: 
+                total_aces += 1
+                total+= 1 
+            else: total += 11    
+        else:            
+            total += card_val(card)
+    if total > 21 and total_aces >= 1:
+            total -= 10
+    return total
 
-
+# build function to be dealt a hand....
+# function get a card....
     
 
 

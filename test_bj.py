@@ -44,10 +44,19 @@ class  TestBlackjack(unittest.TestCase):
         self.assertEqual(blackjack.card_val("A"), (1, 11))
         
     def test_handvalue(self):
+        self.assertEqual(blackjack.hand_val([]), 0)
         self.assertEqual(blackjack.hand_val(["1","2","9"]), 12)
-        
-        
-        
+        self.assertEqual(blackjack.hand_val(["1","2","J"]), 13)
+        self.assertEqual(blackjack.hand_val(["6","2","Q"]), 18)
+        self.assertEqual(blackjack.hand_val(["4","2","K"]), 16)
+        self.assertEqual(blackjack.hand_val(["4","J","K"]), 24)
+        self.assertEqual(blackjack.hand_val(["A","2"]), 13)
+        self.assertEqual(blackjack.hand_val(["A","A"]), 12)
+        self.assertEqual(blackjack.hand_val(["A","J"]), 21)
+        self.assertEqual(blackjack.hand_val(["2","A","2"]), 15)
+        self.assertEqual(blackjack.hand_val(["2","A","A"]), 14)
+        self.assertEqual(blackjack.hand_val(["2","A","A", "8"]), 12)
+        self.assertEqual(blackjack.hand_val(["2","A","A","A", "7"]), 12)
 
 if __name__ == '__main__':
     unittest.main()
