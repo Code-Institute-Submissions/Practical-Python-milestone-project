@@ -30,9 +30,14 @@ def test_users():
         return users
 
 testdata = list(test_users().values())
-sortdata = sorted(testdata, key=lambda users: users.score, reverse=True)
-for i in range(4):
-    print(sortdata[i].name + "\t" + str(sortdata[i].score))
+
+def sort_leaderbd(leader):
+    sortedboard = sorted(leader, key=lambda users: users.score, reverse=True)
+    return sortedboard
+    
+
+
+
 
 
 

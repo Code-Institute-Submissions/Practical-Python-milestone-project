@@ -1,13 +1,12 @@
-from blackjack import card_shoe, init_deal, odds_to_bust, hand_val, hit_me
-import os
+from blackjack import *
+from dataio import savedata, loaddata
+
 
 num_decks = 5
 min_num_card  = 100
-leaderbd = {}
-users = []
-def clear():
-	if os.name == 'posix':
-		os.system('clear')
+
+LEADERBD_SIZE = 4
+
 		
 def per_play(player, dealer, deck):
     playerhand = hand_val(player)
@@ -44,7 +43,7 @@ def getwinner(player, dealer, deck):
         print("player's hand is {0}, dealer has {1} {2}".format(hand_val(player), hand_val(dealer), dealer))
         if hand_val(dealer) > 21:
             status = 1
-            print("dealer goes bust with {0}",format(list(dealer)))
+            print("dealer goes bust with {0}".format(list(dealer)))
             break
         if hand_val(player) == hand_val(dealer):
             status = 0
@@ -57,19 +56,19 @@ def getwinner(player, dealer, deck):
     print("status: {0}".format(status))
     return status    
     
-def play_game(deck,user):
-    player_hand = []
+def play_game(deck, user):
+    users[user].hand = []
     dealer_hand = []
     choice = "Y"
     status = "init"
     #build the card shoe
     #initial deal
-    player_hand = init_deal(deck)
+    users[user].hand = init_deal(deck)
     dealer_hand = init_deal(deck)
-    per_play(player_hand, dealer_hand, deck)
+    per_play(users[user].hand, dealer_hand, deck)
     # user plays
     while choice == "Y":
-        value = hand_val(player_hand)
+        value = hand_val(users[user].hand)
         if value == 21 and status == "init":
             print("Blackjack! Congrats")
             break
@@ -78,36 +77,56 @@ def play_game(deck,user):
             break
         choice = "Y"
         status = "active"
-        player_hand = hit_me(deck, player_hand)
-        per_play(player_hand, dealer_hand, deck)
-        if hand_val(player_hand) > 21:
+        users[user].hand = hit_me(deck, users[user].hand)
+        per_play(users[user].hand, dealer_hand, deck)
+        if hand_val(users[user].hand) > 21:
             print("you've gone bust")
             break
     #dealer plays
-    leaderbd[user] = leaderbd[user] + getwinner(player_hand,dealer_hand, deck)    
+    users[user].score = users[user].score + getwinner(users[user].hand,dealer_hand, deck)   
+    users[user].hand = []
+    return
     
 def getuser():
     user = input("Enter user name:  ")
-    if user.lower() not in users:
-        users.append(user)
-        leaderbd[user] = 0
-    print(users)    
-    return user    
+    if user.lower() not in list(users.keys()):
+        users[user.lower()] = Player(user.lower())
+    return users[user.lower()].name    
 
 
     
 if __name__ == '__main__':
-    clear()
+    # trys to load users dictionary.
+    
+    try:
+        users = loaddata("data/users.pickle")
+    except:
+        users = {}
+    
+    # starts game, builds working deck of cards.
     print("Welcome to Blackjack\n")
     working_deck = card_shoe(num_decks)
-    currentuser =  getuser()
+    
+    # sets up the current user, by their name, which is key to
+    # player's object.    The player's object keeps the user hand and score.
+    
+    currentuser =  getuser() 
 
     while True:
         play_game(working_deck, currentuser)
+        savedata(users,"data/users.pickle" )
+        print("{0} score: {1}".format(currentuser, users[currentuser].score))
+        print("\n \n")
+        leaderbd = list(users.values())
+        leaderbd = sort_leaderbd(leaderbd)
+        if len(leaderbd) < LEADERBD_SIZE:
+            for i in range(len(leaderbd)):
+                print(leaderbd[i].name + "\t" + str(leaderbd[i].score))
+        else:
+            for i in range(LEADERBD_SIZE):
+                print(leaderbd[i].name + "\t" + str(leaderbd[i].score))
         
-        print("{0} score: {1}".format(currentuser, leaderbd[currentuser]))
-        
-        print("\n")
+        print("\n \n")
         play = input("Play another game? Y/N: ")
         if play.upper() != "Y":
             break

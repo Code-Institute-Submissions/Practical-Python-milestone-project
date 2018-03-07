@@ -11,6 +11,30 @@ hand = []
 
 # creates a card shoe.  A cardshoe is the device that holds multiple of decks of cards.
 
+class Player:
+    
+    def __init__(self, name, hand=[], score=0):
+        self.name = name
+        self.hand = hand
+        self.score = score
+
+        
+    def update_score(self, score):
+        self.score = self.score + score
+        
+    def set_score(self, value):
+       self.score = value
+       
+    def set_hand(self, hand):
+        self.hand = hand
+    
+    def reset_hand(self):
+        self.hand = []
+        
+
+ # build a function to find and sort the top ten scores
+ 
+
 def card_shoe(num = 1):
     # if num is less than 1, then set it to 1
     try:
@@ -105,6 +129,11 @@ def odds_to_bust(working_deck, value):
                 totalTest += 1
         odds = (totalTest / deck_size) * 100
         return round(odds)       
+        
+def sort_leaderbd(leader):
+    sortedboard = sorted(leader, key=lambda users: users.score, reverse=True)
+    return sortedboard
+            
 
     
     
