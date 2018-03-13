@@ -11,13 +11,27 @@
 
 {% endblock %} {% block section %}
 
-<div class="row cardhands">
+<div class="row">
     <div class="col-lg-8">
         <h2>Player's Hand</h2>
         <br>
-        {% for card in playerhand %}
-            <img src= "{{ card }}" alt="playing card" >
-        {% endfor %}
+        <div class="cardhands">
+            {% for card in playerhand %}
+            <img src="{{ card }}" alt="playing card" style="height:225px"> {% endfor %}
+        </div>
+        <div>
+            <br>
+            <h3>Player's Score: <span>  </span> {{ playerval }}</h3>
+            <form method="POST">
+                {{ form.csrf_token }}
+
+                <!--{{ form.name.label }} {{ form.name(size=20) }}-->
+                <br><br> {{ form.hit }} {{ form.stay }}
+                <!--<p> {{button}} </p>-->
+
+            </form>
+
+        </div>
     </div>
 </div>
 
