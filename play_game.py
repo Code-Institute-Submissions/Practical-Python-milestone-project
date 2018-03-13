@@ -12,11 +12,11 @@ def per_play(player, dealer, deck):
     playerhand = hand_val(player)
     dealerhand = hand_val(dealer)
     odds = 100 - odds_to_bust(deck, playerhand)
-    for crd in player:
-        print(crd)
-    print(" player's hand value: {0}, odds of going bust a hit {1}%.".format(playerhand, odds ))
-    print(" dealer's hand value: {0}.".format(dealerhand))
-    print("cards in the deck are {0} \n".format(len(deck)))
+    # for crd in player:
+        # print(crd)
+    # print(" player's hand value: {0}, odds of going bust a hit {1}%.".format(playerhand, odds ))
+    # print(" dealer's hand value: {0}.".format(dealerhand))
+    # print("cards in the deck are {0} \n".format(len(deck)))
 
 # return status one if player wins, 0 for tie and -1 for a loss
 # track number of games played and score per user
@@ -87,8 +87,7 @@ def play_game(deck, user):
     users[user].hand = []
     return
     
-def getuser():
-    user = input("Enter user name:  ")
+def getuser(user, users):
     if user.lower() not in list(users.keys()):
         users[user.lower()] = Player(user.lower())
     return users[user.lower()].name    
@@ -140,7 +139,7 @@ if __name__ == '__main__':
     # sets up the current user, by their name, which is key to
     # player's object.    The player's object keeps the user hand and score.
     
-    currentuser =  getuser() 
+    # currentuser =  getuser() 
     
     game_loop_cli(working_deck, currentuser)
 
