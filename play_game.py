@@ -93,29 +93,19 @@ def getuser():
         users[user.lower()] = Player(user.lower())
     return users[user.lower()].name    
 
-
-    
-if __name__ == '__main__':
-    # trys to load users dictionary.
-    
+def setup_bj():
     try:
         users = loaddata("data/users.pickle")
+        return users
     except:
         users = {}
-    
-    # starts game, builds working deck of cards.
-    print("Welcome to Blackjack\n")
-    working_deck = card_shoe(num_decks)
-    
-    # sets up the current user, by their name, which is key to
-    # player's object.    The player's object keeps the user hand and score.
-    
-    currentuser =  getuser() 
-
+        return users
+        
+def game_loop_cli(deck, user):
     while True:
-        play_game(working_deck, currentuser)
+        play_game(deck, user)
         savedata(users,"data/users.pickle" )
-        print("{0} score: {1}".format(currentuser, users[currentuser].score))
+        print("{0} score: {1}".format(user, users[user].score))
         print("\n \n")
         leaderbd = list(users.values())
         leaderbd = sort_leaderbd(leaderbd)
@@ -131,6 +121,28 @@ if __name__ == '__main__':
         if play.upper() != "Y":
             break
         if len(working_deck) < 50:
-            working_deck = card_shoe(num_decks)
+            deck = card_shoe(num_decks)
     
+    
+    
+    
+
+
+
+    
+if __name__ == '__main__':
+    users = setup_bj()
+    working_deck = card_shoe(num_decks)
+
+    # starts game, builds working deck of cards.
+    print("Welcome to Blackjack\n")
+
+    # sets up the current user, by their name, which is key to
+    # player's object.    The player's object keeps the user hand and score.
+    
+    currentuser =  getuser() 
+    
+    game_loop_cli(working_deck, currentuser)
+
+
     
