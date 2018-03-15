@@ -21,6 +21,37 @@ def per_play(player, dealer, deck):
 # return status one if player wins, 0 for tie and -1 for a loss
 # track number of games played and score per user
 
+def getwinner_web(player, dealer, deck):
+    status = 0
+    if hand_val(player) > 21 and hand_val(dealer) <= 21:
+        status = -1
+        print("dealer wins! player has {0}".format(hand_val(player)))
+        return (status, dealer)
+        
+    if hand_val(player) == hand_val(dealer):
+        status = 0
+        print("It's a push! player and dealer has {0}".format(hand_val(player)))
+        return (status, dealer)
+        
+    if hand_val(player) < hand_val(dealer):    
+        status = -1
+        print("dealer wins! player has {0}".format(hand_val(player)))
+        return (status, dealer)
+        
+    while hand_val(dealer) < hand_val(player):
+        dealer = hit_me(deck, dealer)
+        print("player's hand is {0}, dealer has {1} {2}".format(hand_val(player), hand_val(dealer), dealer))
+        if hand_val(dealer) > 21:
+            status = 1
+            break
+        if hand_val(player) == hand_val(dealer):
+            status = 0
+            break
+        if hand_val(dealer) > hand_val(player):
+            status = -1
+            break
+    return (status, dealer)  
+
 def getwinner(player, dealer, deck):
     status = 0
     if hand_val(player) > 21 and hand_val(dealer) <= 21:
@@ -106,6 +137,7 @@ def game_loop_cli(deck, user):
         savedata(users,"data/users.pickle" )
         print("{0} score: {1}".format(user, users[user].score))
         print("\n \n")
+        
         leaderbd = list(users.values())
         leaderbd = sort_leaderbd(leaderbd)
         if len(leaderbd) < LEADERBD_SIZE:

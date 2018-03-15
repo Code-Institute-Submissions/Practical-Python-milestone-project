@@ -22,7 +22,12 @@
         <div>
             <br>
             <h3>Player's Score: <span>  </span> {{ playerval }}</h3>
-            <form method="POST">
+            
+            {% if odds != 0 %}
+            <p>Odds to bust: {{ odds }}%</p>
+            {% endif %}
+            
+            <form action="{{ url_for('user', username = username) }}" method="POST">
                 {{ form.csrf_token }}
 
                 <!--{{ form.name.label }} {{ form.name(size=20) }}-->

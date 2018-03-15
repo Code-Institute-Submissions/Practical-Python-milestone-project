@@ -1,0 +1,73 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="row">
+    <div class="col-xl-9 mx-auto">
+        <h1 class="mb-5">Welcome's to HT's Blackjack!</h1>
+    </div>
+    <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+        <h2>Welcome {{ username }} </h2>
+    </div>
+</div>
+
+{% endblock %} {% block section %}
+
+<div class="row">
+    <div class="col-lg-8">
+        <h2>Player's Hand</h2>
+        <br>
+        <div class="cardhands">
+            {% for card in playerhand %}
+            <img src="{{ card }}" alt="playing card" style="height:225px"> {% endfor %}
+        </div>
+        <div>
+            <br>
+            <h3>Player's Score: <span>  </span> {{ playerval }}</h3>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <h2>Dealer's Hand</h2>
+        <br>
+        <div class="cardhands">
+            {% for card in dealerhand %}
+            <img src="{{ card }}" alt="playing card" style="height:225px"> {% endfor %}
+        </div>
+        <div>
+            <br>
+            <h3>Dealer's Score: <span>    </span> {{ dealerval }} </h3>
+            <p>New Score:  {{ score }}</p>
+            <p>{{ msg }}</p>
+            <br>
+            {% if leaderbd_len < 4 %}
+                <h2>Leader Board</h2>
+            
+                {% for  i in range(leaderbd_len) %}
+                <br>
+                
+                <br>
+                <p> {{ leaderbd[i].name  }} <span>      </span> {{ leaderbd[i].score }}</p>
+                {% endfor %}
+            
+            {% else %}
+                <br>
+                <h2>Leader Board</h2>
+                <br>
+                {% for  i in range(4) %}
+                <p> {{ leaderbd[i].name  }} <span>      </span> {{ leaderbd[i].score }}</p>
+                {% endfor %}
+            {% endif %}
+            
+        </div>
+        <!--<form action="{{ url_for('user', username = username) }}" method="POST">-->
+        <form  method="POST">    
+                {{ form.csrf_token }}
+
+                <br><br> {{ form.new_gm }} {{ form.quit_gm }}
+                <!--<p> {{button}} </p>-->
+
+            </form>
+    </div>
+</div>
+{% endblock %}
