@@ -1,5 +1,7 @@
 import os, json
-from play_game import *
+from play_game import setup_bj, getwinner_web, getuser
+from blackjack import *
+from dataio import savedata, loaddata
 from flask import Flask, render_template, request, redirect, session, url_for
 from flask.ext.wtf import Form
 from wtforms import StringField, SubmitField
@@ -10,8 +12,12 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'well-secret-password'
 
+num_decks = 10
+min_num_card  = 100
+LEADERBD_SIZE = 4
+
 # working_deck = card_shoe(num_decks) 
-working_deck = card_shoe(1)
+working_deck = card_shoe(num_decks)
 users = setup_bj()
 
 def update_deck(working_deck):
