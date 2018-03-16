@@ -1,3 +1,14 @@
+
+"""
+dataio.py includes helper functions to saves and load a pickle file. 
+
+savedata(obj, file) accepts any python object - obj and file name. 
+It pickles the object.ArithmeticError
+
+loaddata(file) reloads the file and return the pickled object.
+
+"""
+
 import pickle
 
 

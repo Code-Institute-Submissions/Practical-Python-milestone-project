@@ -1,3 +1,13 @@
+"""
+cards.py
+
+provides a dictionary of cards and name graphic the represents the card.
+graphics are /static/assets/SGV-cards directory
+
+"""
+
+
+
 front = "playing_cards_from.jpg"
 
 cards = {

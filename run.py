@@ -10,8 +10,14 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'well-secret-password'
 
-working_deck = card_shoe(num_decks)  
+# working_deck = card_shoe(num_decks) 
+working_deck = card_shoe(1)
 users = setup_bj()
+
+def update_deck(working_deck):
+    if len(working_deck) < 50:
+        working_deck = card_shoe(num_decks)
+    
 
 class Bj_player(Form):
     name = StringField(label='Name')
@@ -61,16 +67,20 @@ def user(username):
     
     def teardn():
         users[currentuser].hand = []
+        if "favicon.ico" in users.keys():
+            del users["favicon.ico"]
         savedata(users,"data/users.pickle" )
         session["status"] = "initial"
         session["player_hand"] = []
         
+        
         return
-    
+    # test value
+    decksize = len(working_deck)
+    #
     if session["status"] == "initial": 
         users[currentuser].hand = []
         users[currentuser].hand = init_deal(working_deck)
-        
         session["status"] = "player"
         session["player_hand"] = users[currentuser].hand
         player_val = hand_val(users[currentuser].hand)
@@ -117,7 +127,8 @@ def user(username):
                 dealer_val = hand_val(dealer_hand)
                 users[currentuser].score = users[currentuser].score + -1  
                 msg = game_msg(-1)
-                # users = clean_users(users)
+                if "favicon.ico" in users.keys():
+                    del users["favicon.ico"]
                 leaderbd = list(users.values())
                 leaderbd = sort_leaderbd(leaderbd)
                 leaderbd_len = len(leaderbd)
@@ -135,7 +146,8 @@ def user(username):
                 dealer_hand = display_cards(game_result[1])
                 dealer_val = hand_val(game_result[1])
                 users[currentuser].score = users[currentuser].score + game_result[0]
-                # users = clean_users(users)
+                if "favicon.ico" in users.keys():
+                    del users["favicon.ico"]
                 leaderbd = list(users.values())
                 leaderbd = sort_leaderbd(leaderbd)
                 leaderbd_len = len(leaderbd)
@@ -157,7 +169,8 @@ def user(username):
             dealer_hand = display_cards(game_result[1])
             dealer_val = hand_val(game_result[1])
             users[currentuser].score = users[currentuser].score + game_result[0]
-            # users = clean_users(users)
+            if "favicon.ico" in users.keys():
+                del users["favicon.ico"]
             leaderbd = list(users.values())
             leaderbd = sort_leaderbd(leaderbd)
             leaderbd_len = len(leaderbd)
@@ -173,16 +186,15 @@ def user(username):
             leaderbd=leaderbd, leaderbd_len=leaderbd_len)
             
         if button == "quit":
+            
             return redirect(url_for('index'))
             
         if button == "new":
+            
             return redirect( url_for('user', username = username))    
-            
-            
-            
-            
-    
-    return render_template("game.html", username = username, playerhand=playerhand, playerval=player_val, form=form, odds=odds)
+
+    return render_template("game.html", username = username, playerhand=playerhand, playerval=player_val, form=form, odds=odds,
+    decksize=decksize)
 
 
 

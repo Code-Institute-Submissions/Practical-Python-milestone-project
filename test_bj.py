@@ -4,10 +4,25 @@ import blackjack
 
 class  TestBlackjack(unittest.TestCase):
     """
+    test_bj.py is unittest program for verifying the operation of
+    various key functions in playgame.py and blackjack.py.
+    
     Defines the test for blackjack.py key functions.
     
     function backjack.card_shoe(num) buils a shoe of multiple decks
     where num is number playing decks.
+    
+    Test peformed:
+    
+    - test to blackjack.card_shoe() correctly builds a card shoe of decks
+    - test that blackjack.card_val correctly determine value of card
+    - verifies that blackjack.hand_val() can calculate the value of hand
+    - verifies that blackjack.getcard removes cards from the card shoe
+    - verifies that blackjack.odds_to_bust correctly determines the odds that card will cause 
+      player to go over 21.
+    - verifies the dealer play and determine the winner play_game.getwinner
+    
+    
     """
     # defined a test build a deck of cards.   
     
@@ -20,7 +35,7 @@ class  TestBlackjack(unittest.TestCase):
         "2H", "3H", "4H", "5H", "6H", "7H", "8H", "9H", "10H", "JH", "QH", "KH", "AH"]
         
         
-        # test default value of one deck.
+        # test default value of one deck. 
 
         self.assertEqual(blackjack.card_shoe(1), test_deck*1)
         self.assertEqual(blackjack.card_shoe(), test_deck*1)
@@ -39,6 +54,7 @@ class  TestBlackjack(unittest.TestCase):
 
     """
     
+    # test to verify card values.
     def test_cardvalue(self):
         self.assertEqual(blackjack.card_val("JC"), 10)
         self.assertEqual(blackjack.card_val("QH"), 10)
@@ -49,6 +65,7 @@ class  TestBlackjack(unittest.TestCase):
         self.assertEqual(blackjack.card_val("9C"), 9)
         self.assertEqual(blackjack.card_val("AC"), 1)
         
+    # test to verify hand value    
     def test_handvalue(self):
         self.assertEqual(blackjack.hand_val([]), 0)
         self.assertEqual(blackjack.hand_val(["3C","2H","9S"]), 14)
@@ -66,10 +83,14 @@ class  TestBlackjack(unittest.TestCase):
         self.assertEqual(blackjack.hand_val(["8C","AC", "4D"]), 13)
         self.assertEqual(blackjack.hand_val(["8C","AC", "8D"]), 17)
     
+    # test card is removed from the deck when it's drawn into a hand
+    # the assetIn test was designed to fail.  
     def test_get_card(self):
         working_decks = blackjack.card_shoe(1)
         # self.assertIn(blackjack.getcard(working_decks), working_decks)
         self.assertNotIn(blackjack.getcard(working_decks), working_decks)
+        
+    # test if odds to player going over 21 are calculated correctly    
         
     def test_odd(self):
         working_decks = blackjack.card_shoe(1)
@@ -78,7 +99,7 @@ class  TestBlackjack(unittest.TestCase):
         self.assertEqual(blackjack.odds_to_bust(working_decks, 0),  100)
         self.assertEqual(blackjack.odds_to_bust(working_decks, 10), 100)
         self.assertEqual(blackjack.odds_to_bust(working_decks, 21), 0)
-        
+    
         working_decks = blackjack.card_shoe(1)
         self.assertEqual(blackjack.odds_to_bust(working_decks, 11),  92)
         
@@ -89,7 +110,10 @@ class  TestBlackjack(unittest.TestCase):
         self.assertEqual(blackjack.odds_to_bust(working_decks,15),  46)
         self.assertEqual(blackjack.odds_to_bust(working_decks,19),  15)
         
-        #dealer play
+        #Test the dealer play, dealer draws cards to try to beat player's scoe
+        #When either deal or player wins, getwinner() returns 0 for a push
+        #-1 if the dealer wins and 1 if the player wins.  These scores are added
+        # Player object score attribute to keep a running total.
         working_decks = blackjack.card_shoe(2)
         #if player > 21, dealer wins status -1
         self.assertEqual(play_game.getwinner(["QH", "5D", "10D"], ["5S", "9D"], working_decks), -1)
