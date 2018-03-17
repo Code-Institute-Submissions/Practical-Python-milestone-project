@@ -57,11 +57,11 @@ Key functions:
 # imports key helper functions from blackjack.py, play_game.py, dataio.py, cards.py
 # wtforms is used to create and manage buttons on the game.html and dealer.html pages.
 import os, json
+from flask import Flask, render_template, request, redirect, session, url_for
 from play_game import setup_bj, getwinner_web, getuser
 from blackjack import *
 from dataio import savedata, loaddata
-from flask import Flask, render_template, request, redirect, session, url_for
-from flask.ext.wtf import Form
+from flask_wtf import Form
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 import cards
@@ -80,7 +80,7 @@ LEADERBD_SIZE = 4
 
 # loads the card shoe.  card_shoe from blackjack.py
 working_deck = card_shoe(num_decks)
-# loads users  set up_bj is from play_game.py
+# loads users from file -  play_game.setup_bj() 
 users = setup_bj()
 
 # checks if the card shoe needs to be refilled. 
@@ -116,7 +116,7 @@ def game_msg(status):
 """
 Flask route /
 Starts the game, but generating the landing page,
-index.html.
+index.html.   The landing page only has a form to accept user's name.
 
 Once the user logs, posts their user name, the page is redireted to
 the game page for that user.
@@ -126,6 +126,9 @@ the game page for that user.
 def index():
     #if user name is posted, start the game and go /<username> page.
     if request.method == "POST":
+        # once user name is accepted status is set to initial.
+        # status is used in this script to track the flow of game and represents
+        # start of game where two hands are dealt.
         session["status"] ="initial"
         return redirect(request.form["username"])
     return render_template("index.html")
@@ -151,7 +154,7 @@ key functions:
 
 @app.route('/<username>', methods=["GET", "POST"])
 def user(username):
-    # set up buttons using WFTforms object
+    # set up html buttons using WFTforms object
     form = Bj_player()
     # form2 = Bj_dealer(), tried to create a second wtforms object. didn't work.
     playerhand = []
@@ -164,39 +167,55 @@ def user(username):
     def teardn():
         #clears Player.hand attribute
         users[currentuser].hand = []
-        # removes unwanted user
+        # removes unwanted favicon.ico user
         if "favicon.ico" in users.keys():
             del users["favicon.ico"]
         #uses dataio.savedata to store updated user list    
         savedata(users,"data/users.pickle" )
+        # reset session members to starting state.
         session["status"] = "initial"
         session["player_hand"] = []
         return
     
-    # test value
+    # test value, for determining size of working deck
     decksize = len(working_deck)
     
-    
+    # start of the play, status is initial
     if session["status"] == "initial": 
         users[currentuser].hand = []
+        # player draws two cards -blackjack.init_deal, and stores hand.
         users[currentuser].hand = init_deal(working_deck)
         session["status"] = "player"
         session["player_hand"] = users[currentuser].hand
+        #determine value of hand, odds and creates list of card graphics
         player_val = hand_val(users[currentuser].hand)
         playerhand = display_cards(users[currentuser].hand)
         odds = 100 - odds_to_bust(working_deck, player_val)
         
-        #if player hand value 
+        #if for some reason, the webpage is reloaded before any user actions
+        #reset key variables, for stored settings.
+        # hand_val, odds_to_bust is from blackjack.py
         
     else:
         users[currentuser].hand = session["player_hand"]
         player_val = hand_val(users[currentuser].hand)
         playerhand = display_cards(users[currentuser].hand)
         odds = 100 - odds_to_bust(working_deck, player_val)
-        
-    #examine cards to see if their is a winner.  Get dealers cards.
     
+    #gets the dealer's two cards 
     dealer_hand = init_deal(working_deck)     
+    
+  
+    # The form processing section represent the user player's play loop.
+    # One the initial, game.html page the user is presented with hit and stay buttons
+    # If the hits, they get a card.  If they stay, it moves to the dealer's turn.
+    # the program deals the dealer hand, and displays it cards and winner's information.
+    # play_game. getwinner_web() is controls the dealers play.
+    
+    # on the dealer.html page, there are two buttons, new and quit.
+    # the new button, for that user plays another hand, but relaading 
+    #/username page.
+    #quit redirects the page back to index.html.
     
     if form.validate_on_submit():
         name=form.name.data
@@ -210,76 +229,96 @@ def user(username):
         else:
             button = "quit"
         
-        
+        # if user hits, the user draws a new card. 
+        # the session object is used to store current version
+        # user hand.
         if  button == "hit":
+            #retrieve, update and store user hand.
+            #new hand is retrieved from blackjack.hit_me()
             users[currentuser].hand = session["player_hand"]
             users[currentuser].hand = hit_me(working_deck, users[currentuser].hand)
-            
             session["player_hand"] = users[currentuser].hand
-            
+            # calculates key value of hand, list of card graphics and odds to bust
             player_val = hand_val(users[currentuser].hand)
             playerhand = display_cards(users[currentuser].hand)
             odds = 100 - odds_to_bust(working_deck, player_val)
             
+            # if user's hand is bust, dealer automatically wins
             if player_val > 21:
+                #gets graphics for dealer's card.  
                 dealerhand = display_cards(dealer_hand)
                 dealer_val = hand_val(dealer_hand)
+                # updates the users score for the loss and get's message for display
                 users[currentuser].score = users[currentuser].score + -1  
                 msg = game_msg(-1)
+                #removes artifact from the user's list
                 if "favicon.ico" in users.keys():
                     del users["favicon.ico"]
+                
+                #creates a leader board. create a list of user names
+                #customer sort function in blackjack.py that sorts user names
+                #by scores in ascending order.
                 leaderbd = list(users.values())
                 leaderbd = sort_leaderbd(leaderbd)
+                #dealer.html will show only show up to 4 leaders
                 leaderbd_len = len(leaderbd)
+                #resets variables
                 teardn()
                 
+                # launches dealer.html
                 return render_template("dealer.html", username = username, playerhand=playerhand, playerval=player_val, 
                 dealerhand=dealerhand, dealerval=dealer_val, score = users[currentuser].score, form=form, msg = msg, 
                 leaderbd=leaderbd, leaderbd_len=leaderbd_len)
            
-            # if message is 21
+            # If user's hand is 21, the dealer tries to win.
             if player_val == 21:
                 session["status"] = "dealer"
+                # runs play_game.getwinner_web to play dealer hand and determine winner.
                 game_result = getwinner_web(users[currentuser].hand, dealer_hand, working_deck)
+                #builds winner message, cards for display and dealer's hand value
                 msg = game_msg(game_result[0])
                 dealer_hand = display_cards(game_result[1])
                 dealer_val = hand_val(game_result[1])
+                #updates user's score
                 users[currentuser].score = users[currentuser].score + game_result[0]
+                #cleans out unwanted artifact
                 if "favicon.ico" in users.keys():
                     del users["favicon.ico"]
+                #creates leader board    
                 leaderbd = list(users.values())
                 leaderbd = sort_leaderbd(leaderbd)
                 leaderbd_len = len(leaderbd)
-               
+               # resets system variables
                 teardn()
-                
+                # launches dealer.html page
                 return render_template("dealer.html", username = username, playerhand=playerhand, playerval=player_val, 
                 dealerhand=dealer_hand, dealerval=dealer_val, score = users[currentuser].score, form=form, msg = msg,
                 leaderbd=leaderbd, leaderbd_len=leaderbd_len)
             
-          
+            #launches game.html page, user is still playing their hand          
             return render_template("game.html", username = username, playerhand=playerhand, playerval=player_val, form=form, odds=odds)
-            
+        
+        # user stays, dealer starts it's play    
         if button == "stay":  
-             
             session["status"] = "dealer"
+            # runs play_game.getwinner_web to play dealer hand and determine winner.
             game_result = getwinner_web(users[currentuser].hand, dealer_hand, working_deck)
+            #builds winner message, cards for display and dealer's hand value
             msg = game_msg(game_result[0])
             dealer_hand = display_cards(game_result[1])
             dealer_val = hand_val(game_result[1])
+            #updates user's score
             users[currentuser].score = users[currentuser].score + game_result[0]
+            #cleans out unwanted artifact
             if "favicon.ico" in users.keys():
                 del users["favicon.ico"]
+            #creates leader board     
             leaderbd = list(users.values())
             leaderbd = sort_leaderbd(leaderbd)
             leaderbd_len = len(leaderbd)
+            # resets system variables
             teardn()
-            
-            # users[currentuser].hand = []
-            # savedata(users,"data/users.pickle" )
-            # session["status"] = "initial"
-            # session["player_hand"] = []
-            
+            # launches dealer.html page
             return render_template("dealer.html", username = username, playerhand=playerhand, playerval=player_val, 
             dealerhand=dealer_hand, dealerval=dealer_val, score = users[currentuser].score, form=form, msg = msg, 
             leaderbd=leaderbd, leaderbd_len=leaderbd_len)
@@ -292,6 +331,7 @@ def user(username):
             
             return redirect( url_for('user', username = username))    
 
+    #renders game page before user decideds to hit or stay.
     return render_template("game.html", username = username, playerhand=playerhand, playerval=player_val, form=form, odds=odds,
     decksize=decksize)
 
