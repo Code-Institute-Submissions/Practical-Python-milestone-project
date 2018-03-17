@@ -87,4 +87,3 @@ def getwinner_web(player, dealer, deck):
     return (status, dealer)  
     
   
-    

@@ -79,7 +79,10 @@ min_num_card  = 100
 LEADERBD_SIZE = 4
 
 # loads the card shoe.  card_shoe from blackjack.py
+# .... how do I  make this global....
 working_deck = card_shoe(num_decks)
+savedata(working_deck,"data/deck.pickle" )
+
 # loads users from file -  play_game.setup_bj() 
 users = setup_bj()
 
@@ -129,7 +132,7 @@ def index():
         # once user name is accepted status is set to initial.
         # status is used in this script to track the flow of game and represents
         # start of game where two hands are dealt.
-        session["status"] ="initial"
+        session["status"] ="new"
         return redirect(request.form["username"])
     return render_template("index.html")
 
@@ -160,6 +163,11 @@ def user(username):
     playerhand = []
     dealer_hand = []
     
+    if session["status"] == "new":
+        working_deck = loaddata("data/deck.pickle")
+        session["status"] ="initial"
+        session["deck"] = working_deck
+    
     # grabs current user's Player.name attribute. getuser is from blackjack.py
     currentuser =  getuser(username, users)
     
@@ -178,6 +186,7 @@ def user(username):
         return
     
     # test value, for determining size of working deck
+    working_deck = session["deck"]
     decksize = len(working_deck)
     
     # start of the play, status is initial
@@ -294,9 +303,11 @@ def user(username):
                 return render_template("dealer.html", username = username, playerhand=playerhand, playerval=player_val, 
                 dealerhand=dealer_hand, dealerval=dealer_val, score = users[currentuser].score, form=form, msg = msg,
                 leaderbd=leaderbd, leaderbd_len=leaderbd_len)
-            
+            # test value, for determining size of working deck
+            decksize = len(working_deck)
             #launches game.html page, user is still playing their hand          
-            return render_template("game.html", username = username, playerhand=playerhand, playerval=player_val, form=form, odds=odds)
+            return render_template("game.html", username = username, playerhand=playerhand, playerval=player_val, form=form, odds=odds,
+            decksize=decksize)
         
         # user stays, dealer starts it's play    
         if button == "stay":  
