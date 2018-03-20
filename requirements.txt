@@ -1,5 +1,6 @@
 Flask==0.12.2
-Flask-WTF
+Flask-Bootstrap==3.3.7.1
+Flask-WTF==0.14.2
 itsdangerous
 Jinja2==2.10
 MarkupSafe==1.0
