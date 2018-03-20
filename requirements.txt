@@ -1,8 +1,9 @@
 Flask==0.12.2
+Flask-Bootstrap==3.3.7.1
 Flask-WTF==0.14.2
 Jinja2==2.10
 MarkupSafe==1.0
-Pillow==2.3.0
+Pillow==5.0.0
 WTForms==2.1
 Werkzeug==0.14.1
 chardet==2.2.1
@@ -24,6 +25,7 @@ python-dateutil==2.0
 pytz==2012c
 requests==2.2.1
 scipy==0.13.3
+setuptools==39.0.1
 simplegeneric==0.8.1
 six==1.5.2
 tornado==3.1.1
