@@ -1,5 +1,4 @@
 Flask==0.12.2
-Flask-Bootstrap
 Flask-WTF
 itsdangerous
 Jinja2==2.10
