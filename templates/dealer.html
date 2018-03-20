@@ -1,73 +1,98 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'basegame.html' %} {% block content %}
 
-<div class="row">
-    <div class="col-xl-9 mx-auto">
-        <h1 class="mb-5">Welcome's to HT's Blackjack!</h1>
+<header class="masthead text-white text-center" style="padding-top: 3rem;
+    padding-bottom: 3rem;">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-9 mx-auto">
+                <h1 class="mb-5">Welcome's to HT's Blackjack!</h1>
+            </div>
+            <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+                <h2>Welcome {{ username }} </h2>
+            </div>
+        </div>
+
     </div>
-    <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
-        <h2>Welcome {{ username }} </h2>
-    </div>
-</div>
+</header>
 
 {% endblock %} {% block section %}
 
 <div class="row">
-    <div class="col-lg-8">
-        <h2>Player's Hand</h2>
+    <div class="col-lg-6">
+        <h3>Player's Hand</h3>
+        <hr>
         <br>
         <div class="cardhands">
             {% for card in playerhand %}
-            <img src="{{ card }}" alt="playing card" style="height:225px"> {% endfor %}
+            <img src="{{ card }}" alt="playing card"> {% endfor %}
         </div>
         <div>
             <br>
-            <h3>Player's Score: <span>  </span> {{ playerval }}</h3>
+            <p><strong>Player's Score: &nbsp  {{ playerval }}</strong>
+                <p>
         </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-lg-8">
-        <h2>Dealer's Hand</h2>
+    <div class="col-lg-6">
+
+        <h3>Dealer's Hand</h3>
+        <hr>
         <br>
         <div class="cardhands">
             {% for card in dealerhand %}
-            <img src="{{ card }}" alt="playing card" style="height:225px"> {% endfor %}
+            <img src="{{ card }}" alt="playing card"> {% endfor %}
         </div>
         <div>
             <br>
-            <h3>Dealer's Score: <span>    </span> {{ dealerval }} </h3>
-            <p>New Score:  {{ score }}</p>
-            <p>{{ msg }}</p>
-            <br>
-            {% if leaderbd_len < 4 %}
-                <h2>Leader Board</h2>
-            
-                {% for  i in range(leaderbd_len) %}
-                <br>
-                
-                <br>
-                <p> {{ leaderbd[i].name  }} <span>      </span> {{ leaderbd[i].score }}</p>
-                {% endfor %}
+            <p><strong>Dealer's Score: &nbsp</strong> {{ dealerval }} </p>
+
+        </div>
+    </div>
+
+
+
+</div>
+
+<div class=" text-center">
+    <br>
+    
+    <p><h5>New Score: &nbsp {{ score }} <span>&nbsp &nbsp  &nbsp &nbsp  &nbsp &nbsp</span> {{ msg }}</h5></p>
+    
+    
+</div>
+
+
+<div>
+    <p>
+    
+       <p> <br> {% if leaderbd_len < 4 %} <h5>Leader Board</h5></p>
+    
+                {% for i in range(leaderbd_len) %}
+                <p> {{ leaderbd[i].name }} : &nbsp {{ leaderbd[i].score }}</p>
+                {% endfor %} 
             
             {% else %}
-                <br>
-                <h2>Leader Board</h2>
-                <br>
-                {% for  i in range(4) %}
-                <p> {{ leaderbd[i].name  }} <span>      </span> {{ leaderbd[i].score }}</p>
-                {% endfor %}
+           
+                <h5>Leader Board</h5>
+            
+                    <p> <strong>
+                            {% for  i in range(4) %}
+                             {{ leaderbd[i].name  }} : &nbsp {{ leaderbd[i].score }} &nbsp / &nbsp
+                            {% endfor %}
+                            </strong></p>
             {% endif %}
             
-        </div>
-        <!--<form action="{{ url_for('user', username = username) }}" method="POST">-->
-        <form  method="POST">    
-                {{ form.csrf_token }}
+    </p>
+</div>
 
-                <br><br> {{ form.new_gm }} {{ form.quit_gm }}
-                <!--<p> {{button}} </p>-->
+<div >
+    
+    <form method="POST">
+        {{ form.csrf_token }}
 
-            </form>
-    </div>
+        <br><br> {{ form.new_gm(class_="btn btn-lg btn-primary") }} &nbsp &nbsp &nbsp &nbsp {{ form.quit_gm(class_="btn btn-lg btn-primary") }}
+        <!--<p> {{button}} </p>-->
+    </form>
 </div>
 {% endblock %}

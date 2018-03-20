@@ -87,10 +87,10 @@ savedata(working_deck,"data/deck.pickle" )
 users = setup_bj()
 
 # checks if the card shoe needs to be refilled. 
-def update_deck(deck):
-    if len(deck) < min_num_card:
-        deck = card_shoe(num_decks)
-    return deck    
+# def update_deck(deck):
+#     if len(deck) < min_num_card:
+#         deck = card_shoe(num_decks)
+#     return deck    
     
 # sets up WTForms object for managing web page buttons
 class Bj_player(Form):
@@ -166,7 +166,10 @@ def user(username):
     if session["status"] == "new":
         working_deck = loaddata("data/deck.pickle")
         session["status"] ="initial"
+        if len(working_deck) < min_num_card:
+            working_deck = card_shoe(num_decks)
         session["deck"] = working_deck
+        
     
     # grabs current user's Player.name attribute. getuser is from blackjack.py
     currentuser =  getuser(username, users)

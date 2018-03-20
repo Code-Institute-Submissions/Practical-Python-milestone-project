@@ -37,6 +37,33 @@ header.masthead {
       header.masthead h1 {
         font-size: 3rem; } }
 
+header.mastheaddealer {
+  position: relative;
+  background-color: #343a40;
+  background: url("../img/bg-masthead.jpg") no-repeat center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  padding-top: 8rem;
+  padding-bottom: 8rem; }
+  header.mastheaddealer .overlay {
+    position: absolute;
+    background-color: #212529;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.3; }
+  header.mastheaddealer h1 {
+    font-size: 2rem; }
+  @media (min-width: 768px) {
+    header.mastheaddealer {
+      padding-top: 12rem;
+      padding-bottom: 12rem; }
+      header.mastheaddealer h1 {
+        font-size: 3rem; } }
+
 .showcase .showcase-text {
   padding: 3rem; }
 .showcase .showcase-img {
@@ -47,7 +74,7 @@ header.masthead {
     padding: 7rem; } }
 
 .features-icons {
-  padding-top: 7rem;
+  padding-top: 3rem;
   padding-bottom: 7rem; }
   .features-icons .features-icons-item {
     max-width: 20rem; }
@@ -59,7 +86,7 @@ header.masthead {
       font-size: 5rem; }
 
 .cardhands > img {
-  height: 100px; }
+  height: 150px; }
 
 .testimonials {
   padding-top: 7rem;
