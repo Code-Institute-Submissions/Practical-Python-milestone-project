@@ -6,4 +6,3 @@ Jinja2==2.10
 MarkupSafe==1.0
 Pillow==5.0.0
 pip==9.0.2
-WTForms==2.0
