@@ -52,7 +52,7 @@ Key functions:
     be displayed in dealer.html designating the winner of the hand.
 
 """
-
+#!/usr/bin/env python3
 
 # imports key helper functions from blackjack.py, play_game.py, dataio.py, cards.py
 # wtforms is used to create and manage buttons on the game.html and dealer.html pages.

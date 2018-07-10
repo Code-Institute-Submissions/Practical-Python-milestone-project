@@ -116,11 +116,11 @@ class  TestBlackjack(unittest.TestCase):
         # Player object score attribute to keep a running total.
         working_decks = blackjack.card_shoe(2)
         #if player > 21, dealer wins status -1
-        self.assertEqual(play_game.getwinner(["QH", "5D", "10D"], ["5S", "9D"], working_decks), -1)
+        self.assertEqual(play_game.getwinner_web(["QH", "5D", "10D"], ["5S", "9D"], working_decks), -1)
         #dealer hand equal value to player hand, it's a push
-        self.assertEqual(play_game.getwinner(["QH", "AD"], ["AS", "KD"], working_decks), 0)
-        self.assertEqual(play_game.getwinner(["3H", "AD"], ["AS", "3D"], working_decks), 0)
-        self.assertEqual(play_game.getwinner(["3H", "9D"], ["6S", "6D"], working_decks), 0)
+        self.assertEqual(play_game.getwinner_web(["QH", "AD"], ["AS", "KD"], working_decks), 0)
+        self.assertEqual(play_game.getwinner_web(["3H", "AD"], ["AS", "3D"], working_decks), 0)
+        self.assertEqual(play_game.getwinner_web(["3H", "9D"], ["6S", "6D"], working_decks), 0)
         
         #dealer goes bust, player wins
         
