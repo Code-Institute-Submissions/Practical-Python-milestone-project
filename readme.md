@@ -102,3 +102,6 @@ To run the program, just requires at the terminal -  "python3 run.py".
 
 I develop a program spec and presented it as word document to my mentor and later on balsamiq mock ups.  The program spec defined the function an general proposed operaiton for the program.
 
+# deployment
+
+The project is deployed to Heroku and updated each time updated is pushed to github.

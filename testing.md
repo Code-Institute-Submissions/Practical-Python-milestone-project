@@ -42,7 +42,7 @@ using print statements and python console:
 * used print statemeent to see the users scores before and after.
 
 * used print statement and for loops compare the users objects and leaderboard sorting functions
-  to verify that sore worked.
+  to verify that score worked.
 
 * used print statements to watch gamewinner() build a dealer's hand.
 
