@@ -49,3 +49,8 @@ using print statements and python console:
 In discussing the testing in final review with my mentor, it also became clearer that
 using logging functions would also acheived a better aproach, while creating less
 clutter on the terminal.
+
+
+# know bug
+
+An error appeared once that json was trying to load some binary data.  To fix, the cookies need to be erased.

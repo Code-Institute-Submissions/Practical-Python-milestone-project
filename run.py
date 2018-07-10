@@ -52,7 +52,7 @@ Key functions:
     be displayed in dealer.html designating the winner of the hand.
 
 """
-
+#!/usr/bin/env python3
 
 # imports key helper functions from blackjack.py, play_game.py, dataio.py, cards.py
 # wtforms is used to create and manage buttons on the game.html and dealer.html pages.
@@ -61,7 +61,7 @@ from flask import Flask, render_template, request, redirect, session, url_for
 from play_game import setup_bj, getwinner_web, getuser
 from blackjack import *
 from dataio import savedata, loaddata
-from flask_wtf import Form
+from flask_wtf import Form, FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 import cards
@@ -93,7 +93,7 @@ users = setup_bj()
 #     return deck    
     
 # sets up WTForms object for managing web page buttons
-class Bj_player(Form):
+class Bj_player(FlaskForm):
     name = StringField(label='Name')
     hit = SubmitField(label='Hit Me')
     stay = SubmitField(label='Stay')
@@ -355,6 +355,6 @@ def user(username):
 if __name__ == '__main__':
     app.run(host=os.environ.get('IP'),
             port=int(os.environ.get('PORT')),
-            debug=True)
+            debug=False)
           
 
