@@ -73,7 +73,7 @@ python programs are below with each module having detailed documentation in the 
 
 </dl>
 
-## Key Fromolders
+## Key Folders
 
 * Template folders holds Flask html template.  the templates starting with "base.." are 
   part template from Bootstrap.
@@ -98,5 +98,7 @@ also removes favicon user, so that they don't show up in the leaderboard.
 
 To run the program, just requires at the terminal -  "python3 run.py".
 
+# Design process
 
+I develop a program spec and presented it as word document to my mentor and later on balsamiq mock ups.  The program spec defined the function an general proposed operaiton for the program.
 
